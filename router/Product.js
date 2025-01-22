@@ -3,7 +3,7 @@ import {add,updateById,deleteById,getByCategories,getAllproducts} from "../contr
 
 const router = Router();
 router.get("/", getAllproducts)
-router.get("/:categories", getByCategories)
+router.get("/:category", getByCategories)
 router.delete("/:id", deleteById)
 router.put("/:id", updateById)
 router.post("/", add)
