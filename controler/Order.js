@@ -15,16 +15,16 @@ export const getAllOrder=async(req,res)=>{
 export const getOrderByUserId=async(req,res)=>{
     try{
         const { userId } = req.params; 
-        const products = await productModel.find({ userId: userId });
+        const orders = await orderModel.find({ userId: userId });
 
-        if (products.length === 0) {
-            return res.status(404).json({ message: "No products found for this user" });
+        if (orders.length === 0) {
+            return res.status(404).json({ message: "No orders found for this user" });
         }
-        res.status(200).json(products);
+        res.status(200).json(orders);
 
     }catch(err){
         res.status(500).json({
-            message: "Error retrieving products for user",
+            message: "Error retrieving orders for user",
             error: err.message
         });
 
@@ -45,14 +45,12 @@ export const getOrderById=async(req,res)=>{
 };
 export const addOrder=async(req,res)=>{
     try{
-        const {userId,orderId,date}=req.body;
-        const newOrder=new orderModel({
-            userId,orderId,data
-        });
+        const {userId,address,arrProduct}=req.body;
+        const newOrder=new orderModel({userId,address,arrProduct});
         await newOrder.save();
         res.status(201).json({
-            message: "Product added successfully",
-            order: newProduct
+            message: "order added successfully",
+            order: newOrder
         });
 
     }catch(err){
@@ -64,8 +62,41 @@ export const addOrder=async(req,res)=>{
     }
 
 };
+export const updateOrder=async(req,res)=>{
+    const { orderId } = req.params;
+    const update = req.body;
+    try {
+        const order = await orderModel.findByIdAndUpdate(orderId, update);
 
+        if (!order) {
+            return res.status(404).json({ message: "order not found" });
+        }
 
+        res.status(200).json(order);
 
-    
-   
+    }catch(err){
+        res.status(500).json({
+            message: "Error update order",
+            error: err.message
+        })
+    }
+    };
+
+    export const deleteOrder=async(req,res)=>{
+        try{
+            const { orderId } = req.params;
+
+            // לבצע מחיקה לבדוק אם המוצר קיים
+            const order = await orderModel.findByIdAndDelete(orderId);
+            if (!order||order.orderGoOut==true) {
+                return res.status(404).json({ title: "order not found or ordor go out", message: "The order does not exist. or the order sending" });
+            }
+            res.status(200).json(order);
+
+        }catch(err){
+            res.status(500).json({
+                message: "Error delete order",
+                error: err.message
+        })
+    }
+}

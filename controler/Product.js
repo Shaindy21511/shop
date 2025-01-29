@@ -27,10 +27,10 @@ export const deleteById = async (req, res) => {
 };
 
 export const updateById = async (req, res) => {
-    const { productId } = req.params;
+    const { id } = req.params;
     const updatedData = req.body;
     try {
-        const product = await productModel.findByIdAndUpdate(productId, updatedData, { new: true });
+        const product = await productModel.findByIdAndUpdate(id, updatedData, { new: true });
 
         if (!product) {
             return res.status(404).json({ message: "Product not found" });

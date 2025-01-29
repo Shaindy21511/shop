@@ -7,7 +7,7 @@ router.get("/:id",getUserById);
 router.put("/:id",update);
 router.put("/pay/:id",payFine);
 router.post("/",addUserSignUp);
-router.post("/login/",getUserByUserNamePasswordLogin);
+router.post("/login",getUserByUserNamePasswordLogin);
 
 export default router;
 
