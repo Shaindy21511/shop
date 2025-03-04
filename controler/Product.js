@@ -1,14 +1,33 @@
 import { productModel } from "../models/Product.js";
 
 export const getAllproducts = async (req, res) => {
+    let limit = req.query.limit ||2;
+    let page = req.query.page ||1;
     try {
-        let data = await productModel.find();
+        let data = await productModel.find().skip((page - 1) * limit).limit(limit);
         res.json(data)
     } catch (err) {
         console.log("err");
         res.status(400).json({ title: "error cannot get all", message: err.message })
     }
 }
+
+export async function getTotalProductPages(req, res) {
+    let limit = req.query.limit || 5;
+    try {
+        let result = await productModel.countDocuments();
+
+        res.json({
+            totalCount: result,
+            totalPages: Math.ceil(result / limit),
+            limit: limit
+        });
+    }
+    catch (err) {
+        res.status(400).json({ title: "לא הצלחיח להביא את כמות העמודים של המוצרים", message: err.message })
+    }
+}
+
 
 export const deleteById = async (req, res) => {
     try {
